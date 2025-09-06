@@ -886,7 +886,9 @@ async function sendAdminMenu(ctx) {
     ],
     [
       { text: '💵 Tambah Saldo', callback_data: 'addsaldo_user' },
-      { text: '💵 kurangi Saldo', callback_data: 'minsaldo_user' },
+      { text: '💵 kurangi Saldo', callback_data: 'minsaldo_user' }
+    ],
+    [
       { text: '💵 lihat Saldo', callback_data: 'viewsaldo_user' },
       { text: '📋 List Server', callback_data: 'listserver' }
     ],
