@@ -1399,7 +1399,7 @@ bot.action(/(trial)_username_(vmess|vless|trojan|shadowsocks|ssh)_(.+)/, async (
   await ctx.reply(
     `⚠️ *PERHATIAN*\n\n` +
     `Anda sedang membuat akun *TRIAL ${type.toUpperCase()}* di server *${serverId}*.\n\n` +
-    `Layanan trial hanya berlaku *1x per hari* dan akan aktif selama 3 Jam.\n\n` +
+    `Layanan trial hanya berlaku *1x per hari* dan akan aktif selama 15 menit.\n\n` +
         `Kecuali User RESSEL VPN.\n\n` +
     `Lanjutkan hanya jika Anda sudah yakin.`,
     { parse_mode: 'Markdown' }
