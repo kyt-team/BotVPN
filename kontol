@@ -3341,7 +3341,7 @@ async function checkQRISStatus() {
           }
           await bot.telegram.sendMessage(deposit.userId, 
             '❌ *Pembayaran Expired*\n\n' +
-            'Waktu pembayaran telah habis. Silakan klik Top Up lagi untuk mendapatkan QR baru atau hubungi admin @TechHavenR10.',
+            'Waktu pembayaran telah habis. Silakan klik Top Up lagi untuk mendapatkan QR baru atau hubungi admin .',
             { parse_mode: 'Markdown' }
           );
     } catch (error) {
