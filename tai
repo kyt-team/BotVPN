@@ -288,53 +288,107 @@ async function sendMainMenu(ctx) {
     saldo = row ? row.saldo : 0;
   } catch (e) { saldo = 0; }
 
-  // Statistik user
-  const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).getTime();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-  let userToday = 0, userWeek = 0, userMonth = 0;
-  let globalToday = 0, globalWeek = 0, globalMonth = 0;
-  try {
-    userToday = await new Promise((resolve) => {
-      db.get('SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")', [userId, todayStart], (err, row) => resolve(row ? row.count : 0));
-    });
-    userWeek = await new Promise((resolve) => {
-      db.get('SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")', [userId, weekStart], (err, row) => resolve(row ? row.count : 0));
-    });
-    userMonth = await new Promise((resolve) => {
-      db.get('SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")', [userId, monthStart], (err, row) => resolve(row ? row.count : 0));
-    });
-    globalToday = await new Promise((resolve) => {
-      db.get('SELECT COUNT(*) as count FROM transactions WHERE timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")', [todayStart], (err, row) => resolve(row ? row.count : 0));
-    });
-    globalWeek = await new Promise((resolve) => {
-      db.get('SELECT COUNT(*) as count FROM transactions WHERE timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")', [weekStart], (err, row) => resolve(row ? row.count : 0));
-    });
-    globalMonth = await new Promise((resolve) => {
-      db.get('SELECT COUNT(*) as count FROM transactions WHERE timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")', [monthStart], (err, row) => resolve(row ? row.count : 0));
-    });
-  } catch (e) {}
+// Statistik user
+const now = new Date();
+const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).getTime();
+const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
 
-  // Jumlah pengguna bot
-  let jumlahPengguna = 0;
-  let isReseller = false;
+let userToday = 0, userWeek = 0, userMonth = 0, userTotal = 0;
+let globalToday = 0, globalWeek = 0, globalMonth = 0, globalTotal = 0;
+
+try {
+  // Statistik User
+  userToday = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [userId, todayStart],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  userWeek = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [userId, weekStart],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  userMonth = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [userId, monthStart],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  userTotal = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE user_id = ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [userId],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  // Statistik Global
+  globalToday = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [todayStart],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  globalWeek = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [weekStart],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  globalMonth = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE timestamp >= ? AND type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      [monthStart],
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+
+  globalTotal = await new Promise((resolve) => {
+    db.get(
+      'SELECT COUNT(*) as count FROM transactions WHERE type IN ("ssh","vmess","vless","trojan","shadowsocks")',
+      (err, row) => resolve(row ? row.count : 0)
+    );
+  });
+} catch (e) {
+  console.error(e);
+}
+
+// Jumlah pengguna bot
+let jumlahPengguna = 0;
+let isReseller = false;
 if (fs.existsSync(resselFilePath)) {
   const resellerList = fs.readFileSync(resselFilePath, 'utf8').split('\n').map(x => x.trim());
   isReseller = resellerList.includes(userId.toString());
 }
 const statusReseller = isReseller ? 'Reseller' : 'Bukan Reseller';
-  try {
-    const row = await new Promise((resolve, reject) => {
-      db.get('SELECT COUNT(*) AS count FROM users', (err, row) => { if (err) reject(err); else resolve(row); });
+try {
+  const row = await new Promise((resolve, reject) => {
+    db.get('SELECT COUNT(*) AS count FROM users', (err, row) => {
+      if (err) reject(err); else resolve(row);
     });
-    jumlahPengguna = row.count;
-  } catch (e) { jumlahPengguna = 0; }
+  });
+  jumlahPengguna = row.count;
+} catch (e) {
+  jumlahPengguna = 0;
+}
 
-  // Latency (dummy, bisa diubah sesuai kebutuhan)
-  const latency = (Math.random() * 0.1 + 0.01).toFixed(2);
+// Latency (dummy, bisa diubah sesuai kebutuhan)
+const latency = (Math.random() * 0.1 + 0.01).toFixed(2);
 
-  const messageText = `
+const messageText = `
 ╭─ <b>⚡ BOT VPN ${NAMA_STORE} ⚡</b>
 ├ Bot VPN Premium dengan sistem otomatis
 ├ Pembelian layanan VPN berkualitas tinggi
@@ -349,11 +403,13 @@ Status: <code>${statusReseller}</code>
 • Hari Ini    : ${userToday} akun
 • Minggu Ini  : ${userWeek} akun
 • Bulan Ini   : ${userMonth} akun
+• Total       : ${userTotal} akun
 
 🌐 <b>Statistik Global</b>
 • Hari Ini    : ${globalToday} akun
 • Minggu Ini  : ${globalWeek} akun
 • Bulan Ini   : ${globalMonth} akun
+• Total       : ${globalTotal} akun
 </blockquote>
 
 ⚙️ <b>COMMAND</b>
