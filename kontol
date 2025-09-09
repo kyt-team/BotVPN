@@ -2163,7 +2163,7 @@ bot.action('viewsaldo_user', async (ctx) => {
     await ctx.answerCbQuery();
 
     const users = await new Promise((resolve, reject) => {
-      db.all('SELECT user_id FROM users LIMIT 20', [], (err, users) => {
+      db.all('SELECT user_id FROM users LIMIT 2000', [], (err, users) => {
         if (err) {
           logger.error('❌ Kesalahan saat mengambil daftar user:', err.message);
           reject(err);
@@ -2256,7 +2256,7 @@ bot.action('addsaldo_user', async (ctx) => {
     await ctx.answerCbQuery();
 
     const users = await new Promise((resolve, reject) => {
-      db.all('SELECT user_id FROM users LIMIT 20', [], (err, users) => {
+      db.all('SELECT user_id FROM users LIMIT 2000', [], (err, users) => {
         if (err) {
           logger.error('❌ Kesalahan saat mengambil daftar user:', err.message);
           reject(err);
