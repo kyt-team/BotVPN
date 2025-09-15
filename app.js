@@ -372,12 +372,12 @@ Status: <code>${statusReseller}</code>
       { text: '♻️ Perpanjang Akun', callback_data: 'service_renew' }
     ],
     [
-    #  { text: '❌ Hapus Akun', callback_data: 'service_del' },
+    // { text: '❌ Hapus Akun', callback_data: 'service_del' },
       { text: '📶 Cek Server', callback_data: 'cek_service' }
     ],
     [
-    #  { text: '🗝️ Kunci Akun', callback_data: 'service_lock' },
-     # { text: '🔐 Buka Kunci Akun', callback_data: 'service_unlock' }
+    // { text: '🗝️ Kunci Akun', callback_data: 'service_lock' },
+     // { text: '🔐 Buka Kunci Akun', callback_data: 'service_unlock' }
     ],    
     [
       { text: '⌛ Trial Akun', callback_data: 'service_trial' },
