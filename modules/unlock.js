@@ -46,7 +46,7 @@ async function unlockssh(username, password, exp, iplimit, serverId) {
         const s = d.data;
         const msg = `✅ *Unlock SSH Account Success!*
 
-🔄 *Akun berhasil dihapus*
+🔄 *Akun berhasil diperbarui*
 ────────────────────────────
 👤 *Username*     : \`${s.username}\`
 ────────────────────────────
@@ -284,3 +284,4 @@ async function unlocktrojan(username, exp, quota, limitip, serverId) {
   }
   
   module.exports = { unlockshadowsocks, unlocktrojan, unlockvless, unlockvmess, unlockssh };
+
